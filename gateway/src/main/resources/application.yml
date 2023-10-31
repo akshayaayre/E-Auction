@@ -1,0 +1,51 @@
+server:
+    port: 8080
+spring:
+    application:
+        name: gateway-service
+    main:
+        web-application-type: reactive
+#    cloud:
+#        gateway:
+#            globalcors:
+#                corsConfigurations:
+#                    '[/**]':
+#                        allowedOrigins: "http://localhost:4200"
+#                        allowedHeaders:
+#                            - content-type
+#                        allowedMethods:
+#                            - GET
+#                            - POST
+#                            - PUT
+#                            - DELETE
+#                            - OPTIONS
+    cloud:
+        gateway:
+#            default-filters:
+#                - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            global cors:
+                corsConfigurations:
+                    '[/**]':
+                        allowedOrigins: "http://localhost:4200"
+                        allowedMethods: "*"
+                        allowedHeaders: "*"
+
+eureka:
+    client:
+        fetch-registry: true
+        register-with-eureka: true
+        serviceUrl:
+            defaultZone: http://localhost:8081/eureka
+
+buyer:
+    service:
+        name: buyer-app
+seller:
+    service:
+        name: seller-app
+user:
+    service:
+        name: user-app
+read:
+    service:
+        name: read-service
