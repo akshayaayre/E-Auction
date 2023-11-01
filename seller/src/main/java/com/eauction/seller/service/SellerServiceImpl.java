@@ -51,7 +51,7 @@ public class SellerServiceImpl implements SellerService{
         }
 
         String url = "http://localhost:8080/e-auction/api/v1/read/getAllBidsOnProduct?productId={productId}";
-        restTemplate = new RestTemplate();
+//        restTemplate = new RestTemplate();
         Map<String, Integer> params = Collections.singletonMap("productId", productId);
         List bidDetails=restTemplate.getForObject(url, List.class, params);
 

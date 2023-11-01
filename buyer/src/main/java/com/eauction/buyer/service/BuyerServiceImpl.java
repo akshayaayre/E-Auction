@@ -34,7 +34,7 @@ public class BuyerServiceImpl implements BuyerService{
     @Transactional
     public void addBidOnProduct(BidDetails details) throws InvalidBidRequestException {
 
-        restTemplate = new RestTemplate();
+//        restTemplate = new RestTemplate();
         String url = "http://localhost:8080/e-auction/api/v1/read/getProductDetails?productId={productId}";
         Map<String, Integer> params = Collections.singletonMap("productId", details.getProductId());
         Product product=restTemplate.getForObject(url, Product.class, params);

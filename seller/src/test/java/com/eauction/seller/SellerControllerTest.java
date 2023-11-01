@@ -2,6 +2,7 @@ package com.eauction.seller;
 
 import com.eauction.seller.controller.SellerController;
 import com.eauction.seller.entity.Product;
+import com.eauction.seller.exception.InvalidDeleteRequestException;
 import com.eauction.seller.service.SellerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import java.util.Date;
 
 @SpringBootTest
@@ -122,5 +124,34 @@ public class SellerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(product)))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+    }
+
+    @Test
+    public void testDeleteProduct_Success() throws InvalidDeleteRequestException {
+        int productId = 1;
+
+        // Mocking the service to perform delete without any exception
+        doNothing().when(sellerService).deleteProduct(productId);
+
+        // Calling the controller method
+        ResponseEntity response = sellerController.deleteProduct(productId);
+
+        // Verify that the service method was called with the provided productId
+        verify(sellerService).deleteProduct(productId);
+
+    }
+
+    @Test
+    public void testDeleteProduct_InvalidDeleteRequestException() throws InvalidDeleteRequestException {
+        int productId = 1;
+
+        // Mocking the service to throw an InvalidDeleteRequestException
+        doThrow(InvalidDeleteRequestException.class).when(sellerService).deleteProduct(productId);
+
+        // Calling the controller method and asserting for the exception
+        assertThrows(InvalidDeleteRequestException.class, () -> sellerController.deleteProduct(productId));
+
+        // Verify that the service method was called with the provided productId
+        verify(sellerService).deleteProduct(productId);
     }
 }
